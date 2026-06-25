@@ -1,0 +1,648 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+    <title>PrOmid</title>
+    <!-- Fonts & Icons -->
+    <link href="https://fonts.googleapis.com/css2?family=Inter:ital,opsz,wght@0,100..900;1,100..900&display=swap" rel="stylesheet"/>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css"/>
+    <style>
+        /* ----- RESET & BASE ----- */
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: "Inter", sans-serif;
+            background: #f5f5f7;
+            color: #1d1d1f;
+            font-weight: 300;
+            line-height: 1.5;
+            padding-top: 60px;
+            min-height: 100vh;
+            cursor: pointer;
+        }
+
+        /* ====================================================
+                   نواربالای ثابت
+                   ==================================================== */
+        .navbar {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            background: rgba(255, 255, 255, 0.92);
+            backdrop-filter: blur(20px);
+            -webkit-backdrop-filter: blur(20px);
+            box-shadow: 0 1px 0 rgba(0, 0, 0, 0.08);
+            z-index: 1000;
+            height: 52px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            padding: 0 24px;
+        }
+
+        .navbar-container {
+            max-width: 1200px;
+            width: 100%;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+        }
+
+        .nav-items {
+            display: flex;
+            align-items: center;
+            gap: 2rem;
+            list-style: none;
+        }
+
+        .nav-item {
+            position: relative;
+            padding: 14px 0;
+            font-size: 14px;
+            font-weight: 400;
+            color: #1d1d1f;
+            cursor: pointer;
+            transition: color 0.2s;
+            white-space: nowrap;
+        }
+
+        .nav-item a {
+            text-decoration: none;
+            color: inherit;
+        }
+
+        .nav-item:hover {
+            color: #0066cc;
+        }
+
+        /* ===== لوگو با متن PROMIDMUSIC ===== */
+        .nav-item.logo {
+            font-size: 18px;
+            font-weight: 700;
+            color: #1d1d1f;
+            padding: 0;
+            margin-right: 10px;
+            letter-spacing: -0.5px;
+        }
+        .nav-item.logo:hover {
+            color: #1d1d1f;
+        }
+
+        /* ====================================================
+                   منوی کشویی (فقط برای PROMIDMUSIC)
+                   ==================================================== */
+        .dropdown-menu {
+            position: fixed;
+            top: 52px;
+            left: 50%;
+            transform: translateX(-50%) translateY(0);
+            width: 80%;
+            max-width: 1100px;
+            background: #1d1d1f;
+            backdrop-filter: blur(20px);
+            -webkit-backdrop-filter: blur(20px);
+            border-radius: 0 0 24px 24px;
+            box-shadow: 0 16px 48px rgba(0, 0, 0, 0.3);
+            padding: 32px 40px;
+            opacity: 0;
+            visibility: hidden;
+            transition: opacity 0.3s ease, visibility 0.3s ease;
+            pointer-events: none;
+            z-index: 999;
+            border-top: 1px solid rgba(255, 255, 255, 0.1);
+            color: #ffffff;
+        }
+
+        .nav-item:hover .dropdown-menu,
+        .dropdown-menu:hover {
+            opacity: 1;
+            visibility: visible;
+            pointer-events: auto;
+        }
+
+        .dropdown-menu h4 {
+            font-size: 14px;
+            font-weight: 600;
+            color: #a0a0a5;
+            margin-bottom: 16px;
+            letter-spacing: 0.5px;
+        }
+
+        /* ====================================================
+           بیوگرافی با ۱۰۰ کاراکتر در هر خط
+           ==================================================== */
+        .bio-container {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            width: 100%;
+        }
+
+        .bio-text-100 {
+            font-size: 15px;
+            font-weight: 250;
+            line-height: 1.5;
+            color: #ffffff;
+            text-align: center;
+            font-family: "Inter", sans-serif;
+            max-height: 450px;
+            overflow-y: auto;
+            padding: 0 20px;
+            width: 100%;
+            max-width: 900px;
+            direction: ltr;
+            white-space: pre-wrap;
+            word-break: break-word;
+        }
+
+        .bio-text-100::-webkit-scrollbar {
+            width: 6px;
+        }
+        .bio-text-100::-webkit-scrollbar-track {
+            background: #3a3a3c;
+            border-radius: 4px;
+        }
+        .bio-text-100::-webkit-scrollbar-thumb {
+            background: #666;
+            border-radius: 4px;
+        }
+
+        /* ====================================================
+                   پلیر موسیقی با کنترل‌های جدید
+                   ==================================================== */
+        .custom-audio-player {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            background: rgba(0, 0, 0, 0.04);
+            padding: 6px 16px 6px 12px;
+            border-radius: 30px;
+            font-size: 13px;
+            color: #1d1d1f;
+        }
+
+        .custom-audio-player i {
+            font-size: 16px;
+            cursor: pointer;
+            transition: color 0.2s;
+            color: #1d1d1f;
+        }
+
+        .custom-audio-player i:hover {
+            color: #0066cc;
+        }
+
+        .custom-audio-player .track-name {
+            font-weight: 400;
+            max-width: 100px;
+            white-space: nowrap;
+            overflow: hidden;
+            text-overflow: ellipsis;
+        }
+
+        /* دکمه بیصدا (mute) */
+        .mute-btn {
+            font-size: 16px;
+            cursor: pointer;
+            transition: color 0.2s;
+            color: #1d1d1f;
+        }
+        .mute-btn:hover {
+            color: #0066cc;
+        }
+
+        /* اسلایدر حجم صدا */
+        .volume-slider {
+            width: 60px;
+            height: 4px;
+            -webkit-appearance: none;
+            appearance: none;
+            background: #d2d2d7;
+            border-radius: 2px;
+            outline: none;
+            transition: background 0.2s;
+            cursor: pointer;
+        }
+
+        .volume-slider::-webkit-slider-thumb {
+            -webkit-appearance: none;
+            appearance: none;
+            width: 12px;
+            height: 12px;
+            border-radius: 50%;
+            background: #1d1d1f;
+            cursor: pointer;
+            transition: background 0.2s;
+        }
+
+        .volume-slider::-webkit-slider-thumb:hover {
+            background: #0066cc;
+        }
+
+        .volume-slider::-moz-range-thumb {
+            width: 12px;
+            height: 12px;
+            border-radius: 50%;
+            background: #1d1d1f;
+            cursor: pointer;
+            border: none;
+        }
+
+        .custom-audio-player audio {
+            display: none;
+        }
+
+        /* ====================================================
+                   محتوای اصلی
+                   ==================================================== */
+        .container {
+            max-width: 700px;
+            width: 100%;
+            margin: 0 auto;
+            padding: 40px 20px 80px;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            min-height: calc(100vh - 120px);
+            text-align: center;
+        }
+
+        @keyframes fadeInUp {
+            from {
+                opacity: 0;
+                transform: translateY(20px) scale(0.98);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0) scale(1);
+            }
+        }
+
+        .hero-name {
+            font-size: 5.5rem;
+            font-weight: 350;
+            letter-spacing: -0.03em;
+            color: #1d1d1f;
+            margin-bottom: 12px;
+            animation: fadeInUp 0.8s ease-out forwards;
+            opacity: 0;
+        }
+
+        .sub-text {
+            font-size: 0.9rem;
+            letter-spacing: 0.5px;
+            color: #86868b;
+            margin-bottom: 28px;
+            font-weight: 350;
+            animation: fadeInUp 1s ease-out 0.2s forwards;
+            opacity: 0;
+            max-width: 500px;
+        }
+
+        .social-icons {
+            display: flex;
+            justify-content: center;
+            gap: 18px;
+            flex-wrap: wrap;
+            animation: fadeInUp 1s ease-out 0.4s forwards;
+            opacity: 0;
+        }
+
+        .social-icons a {
+            color: #86868b;
+            font-size: 1.0rem;
+            transition: all 0.2s ease;
+            display: inline-block;
+            border-bottom: 2px solid transparent;
+            padding-bottom: 4px;
+        }
+
+        .social-icons a:hover {
+            color: #1d1d1f;
+            border-bottom-color: #1d1d1f;
+            transform: translateY(-2px);
+        }
+
+        .footer-note {
+            font-size: 0.7rem;
+            color: #1d1d1f;
+            letter-spacing: 2px;
+            font-weight: 350;
+            animation: fadeInUp 1s ease-out 0.6s forwards;
+            opacity: 0;
+            text-align: center;
+            padding: 20px 20px 30px;
+        }
+
+        .footer-note a {
+            color: #1d1d1f;
+            text-decoration: none;
+            transition: opacity 0.2s;
+        }
+        .footer-note a:hover {
+            opacity: 0.5;
+        }
+
+        /* ===== Responsive ===== */
+        @media (max-width: 992px) {
+            .dropdown-menu {
+                width: 85%;
+                padding: 24px 28px;
+            }
+            .bio-text-100 {
+                font-size: 14px;
+                max-height: 400px;
+            }
+        }
+
+        @media (max-width: 768px) {
+            .navbar {
+                padding: 0 12px;
+                height: 48px;
+            }
+            .nav-items {
+                gap: 1rem;
+            }
+            .nav-item {
+                font-size: 12px;
+                padding: 12px 0;
+            }
+            .nav-item.logo {
+                font-size: 15px;
+            }
+            .dropdown-menu {
+                width: 92%;
+                padding: 18px 16px;
+                top: 48px;
+                border-radius: 0 0 16px 16px;
+            }
+            .bio-text-100 {
+                font-size: 13px;
+                max-height: 300px;
+                padding: 0 10px;
+            }
+            .custom-audio-player {
+                padding: 4px 12px 4px 8px;
+                font-size: 12px;
+                gap: 8px;
+            }
+            .custom-audio-player .track-name {
+                max-width: 60px;
+            }
+            .volume-slider {
+                width: 40px;
+            }
+            .hero-name {
+                font-size: 3.8rem;
+            }
+            .social-icons a {
+                font-size: 0.9rem;
+            }
+            .sub-text {
+                font-size: 0.8rem;
+            }
+        }
+
+        @media (max-width: 480px) {
+            .nav-items {
+                gap: 0.6rem;
+            }
+            .nav-item {
+                font-size: 10px;
+            }
+            .nav-item.logo {
+                font-size: 12px;
+                margin-right: 4px;
+            }
+            .dropdown-menu {
+                padding: 14px 12px;
+            }
+            .dropdown-menu h4 {
+                font-size: 12px;
+            }
+            .bio-text-100 {
+                font-size: 12px;
+                max-height: 250px;
+                padding: 0 8px;
+            }
+            .hero-name {
+                font-size: 2.8rem;
+            }
+            .custom-audio-player .track-name {
+                max-width: 40px;
+            }
+            .volume-slider {
+                width: 30px;
+            }
+        }
+    </style>
+</head>
+<body>
+
+    <!-- ====================================================
+    نواربالا
+    ==================================================== -->
+    <nav class="navbar">
+        <div class="navbar-container">
+            <ul class="nav-items">
+                <!-- ===== فقط PROMIDMUSIC با بیوگرافی ===== -->
+                <li class="nav-item logo">
+                    <a href="#">PROMIDMUSIC</a>
+                    <div class="dropdown-menu" id="bioDropdown">
+                        <h4>About Me</h4>
+                        <div class="bio-container">
+                            <div class="bio-text-100">
+Omid Mahramzadeh, professionally known as PrOmid, is an award-winning composer, electronic music producer, sound engineer, artistic director, and music therapist with more than two decades of international experience in music and multimedia production. Holding a Bachelor's degree in Software Engineering, a Master's degree in Electronic Music, and a professional specialization in Music Therapy, PrOmid combines artistic creativity with technical expertise to create immersive sonic experiences that bridge electronic music, orchestral composition, ambient sound design, and wellness-focused audio concepts. Since 2008, he has collaborated with the renowned Buddha-Bar ecosystem, contributing to luxury music productions and international projects. Throughout his career, he has released more than 50 albums across various electronic music genres through respected international record labels and has had over 200 compositions featured in globally recognized compilations. As a composer and producer, PrOmid has worked with acclaimed musicians, performers, filmmakers, and creative organizations worldwide. His work spans electronic music, film scoring, live performances, immersive entertainment experiences, and innovative music therapy programs designed to enhance focus, relaxation, emotional balance, and personal well-being. His artistic achievements have been recognized by several prestigious festivals and institutions, including honors from the Fajr International Music Festival, the Fajr Film Festival, and the Canadian International Film Festival. He has also received recognition for his film music contributions from international film festivals in Canada and Toronto. PrOmid is an official member of the Iranian House of Music and a member of the Fédération Internationale des Musiciens (FIM) in France. His work is characterized by a distinctive fusion of electronic music, cinematic storytelling, cultural influences, and contemporary sound innovation. Today, PrOmid continues to develop international music projects, luxury entertainment concepts, film scores, live performances, and transformative music experiences that connect audiences through emotion, technology, and artistic excellence.
+                            </div>
+                        </div>
+                    </div>
+                </li>
+            </ul>
+
+            <!-- ===== پلیر موسیقی با کنترل‌های جدید ===== -->
+            <div class="custom-audio-player">
+                <!-- دکمه Play/Pause -->
+                <i class="fas fa-play" id="playBtn" onclick="togglePlay()"></i>
+
+                <!-- دکمه Mute/Unmute -->
+                <i class="fas fa-volume-up" id="muteBtn" onclick="toggleMute()"></i>
+
+                <!-- اسلایدر حجم صدا -->
+                <input type="range" class="volume-slider" id="volumeSlider" min="0" max="1" step="0.01" value="0.8" />
+
+                <!-- نام ترک -->
+                <span class="track-name">intro</span>
+
+                <!-- المنت audio مخفی -->
+                <audio id="audioPlayer" loop>
+                    <source src="https://raw.githubusercontent.com/PROMIDMUSIC/omid/4562ae9b7a92dcec51bbcc143b7813cc1c98e8cc/intro%20music.mp3" type="audio/mpeg">
+                    مرورگر شما از پخش صدا پشتیبانی نمی‌کند.
+                </audio>
+            </div>
+        </div>
+    </nav>
+
+    <!-- ====================================================
+    محتوای اصلی
+    ==================================================== -->
+    <div class="container">
+        <h1 class="hero-name">PrOmid</h1>
+        <p class="sub-text">Bridging Eastern mysticism and modern electronic frequencies</p>
+        <div class="social-icons">
+            <a href="https://soundcloud.com/promid" target="_blank" aria-label="SoundCloud"><i class="fab fa-soundcloud"></i></a>
+            <a href="https://openlab.fm/radio/shows/global-frequency" target="_blank" aria-label="Global Frequency"><i class="fas fa-broadcast"></i></a>
+            <a href="https://music.apple.com/us/artist/promid/339408591" target="_blank" aria-label="Apple Music"><i class="fab fa-apple"></i></a>
+            <a href="https://www.youtube.com/user/promidmusicofficial" target="_blank" aria-label="YouTube"><i class="fab fa-youtube"></i></a>
+            <a href="https://www.instagram.com/promidmusic/" target="_blank" aria-label="Instagram"><i class="fab fa-instagram"></i></a>
+            <a href="https://www.facebook.com/promidmusic/" target="_blank" aria-label="Facebook"><i class="fab fa-facebook"></i></a>
+            <a href="https://www.linkedin.com/in/omid-mahramzadeh-72129276/" target="_blank" aria-label="LinkedIn"><i class="fab fa-linkedin"></i></a>
+            <a href="https://t.me/PROMIDMUSIC" target="_blank" aria-label="Telegram"><i class="fab fa-telegram"></i></a>
+            <a href="https://x.com/promidmusic" target="_blank" aria-label="X"><i class="fab fa-x-twitter"></i></a>
+            <a href="mailto:omidmahramzadeh@gmail.com" target="_blank" aria-label="Email"><i class="fas fa-envelope"></i></a>
+            <a href="https://www.imdb.com/name/nm12805757/" target="_blank" aria-label="IMDb"><i class="fab fa-imdb"></i></a>
+            <a href="https://open.spotify.com/artist/3AjD58hx65rhq8bzCcWxeb" target="_blank" aria-label="Spotify"><i class="fab fa-spotify"></i></a>
+        </div>
+    </div>
+
+    <!-- ===== فوتر ===== -->
+    <div class="footer-note">
+        <a href="https://www.promidmusic.com" target="_blank">www.promidmusic.com</a>
+    </div>
+
+    <!-- ====================================================
+    جاوااسکریپت
+    ==================================================== -->
+    <script>
+        // ----- عناصر پلیر -----
+        const audio = document.getElementById('audioPlayer');
+        const playBtn = document.getElementById('playBtn');
+        const muteBtn = document.getElementById('muteBtn');
+        const volumeSlider = document.getElementById('volumeSlider');
+
+        // ----- تنظیمات اولیه -----
+        let isMuted = false;
+        let previousVolume = 0.8;
+
+        // تنظیم حجم اولیه
+        audio.volume = 0.8;
+        volumeSlider.value = 0.8;
+
+        // ----- تابع پخش موسیقی -----
+        function playMusic() {
+            audio.play().then(function() {
+                playBtn.className = 'fas fa-pause';
+                console.log('موسیقی پخش شد');
+            }).catch(function(error) {
+                console.log('پخش خودکار ممکن است توسط مرورگر مسدود شده باشد.');
+            });
+        }
+
+        // ----- پخش خودکار ۴ ثانیه بعد از بارگذاری -----
+        window.addEventListener('load', function() {
+            setTimeout(function() {
+                playMusic();
+            }, 4000); // ۴ ثانیه
+
+            // اگر پخش نشد، با کلیک روی صفحه پخش شود
+            document.body.addEventListener('click', function() {
+                if (audio.paused) {
+                    playMusic();
+                }
+            }, { once: true });
+        });
+
+        // ----- دکمه Play/Pause -----
+        function togglePlay() {
+            if (audio.paused) {
+                audio.play();
+                playBtn.className = 'fas fa-pause';
+            } else {
+                audio.pause();
+                playBtn.className = 'fas fa-play';
+            }
+        }
+
+        // ----- دکمه Mute/Unmute -----
+        function toggleMute() {
+            if (isMuted) {
+                // برگرداندن حجم به حالت قبل
+                audio.volume = previousVolume;
+                volumeSlider.value = previousVolume;
+                muteBtn.className = 'fas fa-volume-up';
+                isMuted = false;
+            } else {
+                // ذخیره حجم فعلی و بیصدا کردن
+                previousVolume = audio.volume;
+                audio.volume = 0;
+                volumeSlider.value = 0;
+                muteBtn.className = 'fas fa-volume-mute';
+                isMuted = true;
+            }
+        }
+
+        // ----- اسلایدر حجم صدا -----
+        volumeSlider.addEventListener('input', function() {
+            const newVolume = parseFloat(this.value);
+            audio.volume = newVolume;
+
+            // به‌روزرسانی وضعیت دکمه Mute
+            if (newVolume === 0) {
+                muteBtn.className = 'fas fa-volume-mute';
+                isMuted = true;
+            } else {
+                muteBtn.className = 'fas fa-volume-up';
+                isMuted = false;
+                previousVolume = newVolume;
+            }
+        });
+
+        // ===== اطمینان از ثابت ماندن منوی بیوگرافی =====
+        const bioDropdown = document.getElementById('bioDropdown');
+        const logoItem = document.querySelector('.nav-item.logo');
+
+        bioDropdown.addEventListener('mouseenter', function() {
+            this.style.opacity = '1';
+            this.style.visibility = 'visible';
+            this.style.pointerEvents = 'auto';
+        });
+
+        bioDropdown.addEventListener('mouseleave', function() {
+            if (!logoItem.matches(':hover')) {
+                this.style.opacity = '0';
+                this.style.visibility = 'hidden';
+                this.style.pointerEvents = 'none';
+            }
+        });
+
+        logoItem.addEventListener('mouseenter', function() {
+            const menu = this.querySelector('.dropdown-menu');
+            if (menu) {
+                menu.style.opacity = '1';
+                menu.style.visibility = 'visible';
+                menu.style.pointerEvents = 'auto';
+            }
+        });
+
+        logoItem.addEventListener('mouseleave', function() {
+            const menu = this.querySelector('.dropdown-menu');
+            if (menu) {
+                setTimeout(function() {
+                    if (!menu.matches(':hover')) {
+                        menu.style.opacity = '0';
+                        menu.style.visibility = 'hidden';
+                        menu.style.pointerEvents = 'none';
+                    }
+                }, 100);
+            }
+        });
+    </script>
+</body>
+</html>
